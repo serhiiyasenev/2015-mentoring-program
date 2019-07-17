@@ -22,6 +22,7 @@ namespace NetMentoring
             
             var executionTime = Timer.ElapsedMilliseconds / 1000;
             Timer.Stop();
+
             Console.WriteLine("Finished");
             Console.WriteLine($"ExecutionTime: {executionTime} seconds");
             new MemoryStreamLogger().ReadFile();
