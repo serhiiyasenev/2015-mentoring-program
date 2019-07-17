@@ -29,8 +29,8 @@ namespace NetMentoring
 
         public void Log(string message)
         {
-            _memoryStream = new FileStream(PathToFile, FileMode.OpenOrCreate);
-            _streamWriter = new StreamWriter(_memoryStream); 
+            _memoryStream = new FileStream(PathToFile, FileMode.Open);
+            _streamWriter = new StreamWriter(_memoryStream);
             _streamWriter.Write(message);
         }
 
