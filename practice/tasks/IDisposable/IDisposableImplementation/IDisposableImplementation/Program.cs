@@ -11,29 +11,23 @@ namespace NetMentoring
         {
             Timer.Start();
 
-            for (var i = 0; i < 10000; i++)
+            using (var logger = new MemoryStreamLogger())
             {
-                if (i == 9999)
-                    WriteLog("Iteration number #" + i + " " + DateTime.Now.ToString("F"));
-                else
-                    WriteLog("Iteration number #" + i);
+                for (var i = 0; i < 10000; i++)
+                {
+                    if (i == 9999)
+                        logger.Log("Iteration number #" + i + " " + DateTime.Now.ToString("F"));
+                    else
+                        logger.Log("Iteration number #" + i);
+                }
+                logger.ReadFile();
             }
-            
+
             var executionTime = Timer.ElapsedMilliseconds;
             Timer.Stop();
 
             Console.WriteLine("Finished");
             Console.WriteLine($"ExecutionTime: {executionTime} Milliseconds");
-            new MemoryStreamLogger().ReadFile();
-            Console.ReadKey();
         }
-
-        private static void WriteLog(string str)
-        {
-            var logger = new MemoryStreamLogger();
-            logger.Log(str);
-            logger.Dispose();
-        }
-
     }
 }
