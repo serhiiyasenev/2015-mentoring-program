@@ -5,29 +5,20 @@ namespace NetMentoring
 {
     internal class Program
     {
-        public static Stopwatch Timer { get; } = new Stopwatch();
-
-        private static void Main(string[] args)
+        private static void Main()
         {
-            Timer.Start();
-
-            using (var logger = new MemoryStreamLogger())
-            {
-                for (var i = 0; i < 10000; i++)
-                {
-                    if (i == 9999)
-                        logger.Log("Iteration number #" + i + " " + DateTime.Now.ToString("F"));
-                    else
-                        logger.Log("Iteration number #" + i);
-                }
-                logger.ReadFile();
-            }
-
-            var executionTime = Timer.ElapsedMilliseconds;
-            Timer.Stop();
+            var timer = new Stopwatch();
+            var logger = new MemoryStreamLogger();
+            timer.Start();
+            for (var i = 0; i < 10000; i++)
+                logger.Log(i == 9999 ? $"Iteration number #{i} {DateTime.Now:F}" : $"Iteration number #{i}");
+            logger.ReadFile();
+            var executionTime = timer.ElapsedMilliseconds;
+            timer.Stop();
 
             Console.WriteLine("Finished");
             Console.WriteLine($"ExecutionTime: {executionTime} Milliseconds");
+            Console.Read();
         }
     }
 }

@@ -3,50 +3,34 @@ using System.IO;
 
 namespace NetMentoring
 {
-    public class MemoryStreamLogger : IDisposable
+    public class MemoryStreamLogger
     {
-        private StreamWriter _streamWriter;
-        private StreamReader _streamReader;
         private const string PathToFile = @"Files\log.txt";
-        private bool _disposed;
 
         public void ReadFile()
         {
-            _streamReader = new StreamReader(PathToFile);
-            var counter = 0;
-            string line;
-            while ((line = _streamReader.ReadLine()) != null)
+            if (!File.Exists(PathToFile)) return;
+            using (var streamReader = new StreamReader(PathToFile))
             {
-                Console.WriteLine(line);
-                counter++;
+                var counter = 0;
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                    counter++;
+                }
+                streamReader.Close();
+                Console.WriteLine($"File has {counter} lines.");
             }
-            _streamReader?.Close();
-            Console.WriteLine($"File has {counter} lines.");
         }
 
         public void Log(string message)
         {
-            _streamWriter = new StreamWriter(PathToFile);
-            _streamWriter.Write(message);
-            _streamWriter?.Close();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposeManagedResources)
-        {
-            Console.WriteLine("protected virtual void Dispose");
-            if (_disposed) return;
-            if (disposeManagedResources)
+            using (var streamWriter = new StreamWriter(PathToFile))
             {
-                _streamWriter?.Dispose();
-                _streamReader?.Dispose();
+                streamWriter.Write(message);
+                streamWriter.Close();
             }
-            _disposed = true;
         }
     }
 }
