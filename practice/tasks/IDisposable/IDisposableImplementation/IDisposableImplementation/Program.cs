@@ -8,20 +8,15 @@ namespace NetMentoring
     {
         private const string PathToFile = @"Files\log.txt";
 
-        private static void Main(string[] args)
+        private static void Main()
         {
-            var Timer = new Stopwatch();
-            Timer.Start();
+            var timer = new Stopwatch();
+            timer.Start();
 
-            using (var logWirter = new LogWirter(PathToFile))
+            using (var logWriter = new LogWriter(PathToFile))
             {
                 for (var i = 0; i < 10000; i++)
-                {
-                    if (i == 9999)
-                        logWirter.Log("Iteration number #" + i + " " + DateTime.Now.ToString("F"));
-                    else
-                        logWirter.Log("Iteration number #" + i);
-                }
+                    logWriter.Log(i == 9999 ? $"Iteration number #{i} {DateTime.Now:F}" : $"Iteration number #{i}");
             }
 
             using (var logReader = new LogReader(PathToFile))
@@ -29,11 +24,12 @@ namespace NetMentoring
                 logReader.ReadFile();
             }
 
-            var executionTime = Timer.ElapsedMilliseconds;
-            Timer.Stop();
+            var executionTime = timer.ElapsedMilliseconds;
+            timer.Stop();
 
             Console.WriteLine("Finished.");
             Console.WriteLine($"ExecutionTime: {executionTime} Milliseconds.");
+            Console.Read();
         }
     }
 }

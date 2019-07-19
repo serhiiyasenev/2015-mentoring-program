@@ -3,32 +3,46 @@ using System.IO;
 
 namespace NetMentoring.Loggers
 {
-    public class LogWirter : IDisposable
+    public class LogWriter : IDisposable
     {
         private StreamWriter _streamWriter;
-        private bool _disposed;
 
-        public LogWirter(string pathToFile)
+        public LogWriter(string pathToFile) 
+            => _streamWriter = new StreamWriter(pathToFile);
+
+        // added for educational purposes
+        ~LogWriter() 
+            => Dispose(false);
+
+        public void Log(string message)
         {
-            if (_streamWriter == null)
-                _streamWriter = new StreamWriter(pathToFile);
+            try
+            {
+                _streamWriter.WriteLine(message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                _streamWriter?.Close();
+            }
         }
 
-        public void Log(string message) => _streamWriter.WriteLine(message);
-
+        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposeManagedResources)
+        private bool _disposeManagedResources;
+
+        protected virtual void Dispose(bool disposing)
         {
-            Console.WriteLine("protected virtual void Dispose");
-            if (_disposed) return;
-            if (disposeManagedResources)
+            Console.WriteLine("Call of protected virtual void Dispose");
+            if (_disposeManagedResources) return;
+            if (disposing)
                 _streamWriter?.Dispose();
-            _disposed = true;
+            _disposeManagedResources = true;
         }
     }
 }
