@@ -7,9 +7,21 @@ namespace NetMentoring
     {
         private const string PathToFile = @"Files\log.txt";
 
+        public void Log(string message)
+        {
+            using (var streamWriter = new StreamWriter(PathToFile))
+            {
+                streamWriter.WriteLine(message);
+            }
+        }
+
         public void ReadFile()
         {
-            if (!File.Exists(PathToFile)) return;
+            if (!File.Exists(PathToFile))
+            {
+                Console.WriteLine($"File '{PathToFile}' does not exist!");
+                return;
+            }
             using (var streamReader = new StreamReader(PathToFile))
             {
                 var counter = 0;
@@ -19,17 +31,7 @@ namespace NetMentoring
                     Console.WriteLine(line);
                     counter++;
                 }
-                streamReader.Close();
                 Console.WriteLine($"File has {counter} lines.");
-            }
-        }
-
-        public void Log(string message)
-        {
-            using (var streamWriter = new StreamWriter(PathToFile))
-            {
-                streamWriter.Write(message);
-                streamWriter.Close();
             }
         }
     }
