@@ -5,7 +5,7 @@ namespace NetMentoring.Loggers
 {
     public class LogWriter : IDisposable
     {
-        private StreamWriter _streamWriter;
+        private readonly StreamWriter _streamWriter;
 
         public LogWriter(string pathToFile) 
             => _streamWriter = new StreamWriter(pathToFile);
@@ -34,15 +34,15 @@ namespace NetMentoring.Loggers
             GC.SuppressFinalize(this);
         }
 
-        private bool _disposeManagedResources;
+        private bool _alreadyDisposed;
 
-        protected virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposeManagedResources)
         {
             Console.WriteLine("Call of protected virtual void Dispose");
-            if (_disposeManagedResources) return;
-            if (disposing)
+            if (_alreadyDisposed) return;
+            if (disposeManagedResources)
                 _streamWriter?.Dispose();
-            _disposeManagedResources = true;
+            _alreadyDisposed = true;
         }
     }
 }

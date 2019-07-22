@@ -5,7 +5,7 @@ namespace NetMentoring.Loggers
 {
     public class LogReader : IDisposable
     {
-        private StreamReader _streamReader;
+        private readonly StreamReader _streamReader;
 
         public LogReader(string pathToFile) 
             => _streamReader = new StreamReader(pathToFile);
@@ -41,15 +41,15 @@ namespace NetMentoring.Loggers
             GC.SuppressFinalize(this);
         }
 
-        private bool _disposeManagedResources;
+        private bool _alreadyDisposed;
 
-        protected virtual void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposeManagedResources)
         {
             Console.WriteLine("Call of protected virtual void Dispose");
-            if (_disposeManagedResources) return;
-            if (disposing)
+            if (_alreadyDisposed) return;
+            if (disposeManagedResources)
                 _streamReader?.Dispose();
-            _disposeManagedResources = true;
+            _alreadyDisposed = true;
         }
     }
 }
