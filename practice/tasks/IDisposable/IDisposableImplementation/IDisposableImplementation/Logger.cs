@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NetMentoring
 {
-    public class MemoryStreamLogger
+    public class Logger
     {
         private const string PathToFile = @"Files\log.txt";
 

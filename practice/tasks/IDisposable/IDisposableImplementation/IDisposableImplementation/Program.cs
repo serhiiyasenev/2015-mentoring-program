@@ -8,7 +8,7 @@ namespace NetMentoring
         private static void Main()
         {
             var timer = new Stopwatch();
-            var logger = new MemoryStreamLogger();
+            var logger = new Logger();
             timer.Start();
             for (var i = 0; i < 10000; i++)
                 logger.Log(i == 9999 ? $"Iteration number #{i} {DateTime.Now:F}" : $"Iteration number #{i}");
