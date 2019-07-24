@@ -1,22 +1,35 @@
-﻿using System;
+﻿using NetMentoring.Loggers;
+using System;
+using System.Diagnostics;
 
 namespace NetMentoring
 {
     internal class Program
     {
-        private static void Main(string[] args)
-        {            
-            for(var i = 0; i < 10000; i++)
-                WriteLog("Interation number #" + i);
+        private const string PathToFile = @"Files\log.txt";
 
-            Console.WriteLine("Finished");
-            Console.ReadKey();
-        }
-
-        private static void WriteLog(string str)
+        private static void Main()
         {
-            var logger = new MemoryStreamLogger();
-            logger.Log(str);
+            var timer = new Stopwatch();
+            timer.Start();
+
+            using (var logWriter = new LogWriter(PathToFile))
+            {
+                for (var i = 0; i < 10000; i++)
+                    logWriter.Log(i == 9999 ? $"Iteration number #{i} {DateTime.Now:F}" : $"Iteration number #{i}");
+            }
+
+            using (var logReader = new LogReader(PathToFile))
+            {
+                logReader.ReadFile();
+            }
+
+            var executionTime = timer.ElapsedMilliseconds;
+            timer.Stop();
+
+            Console.WriteLine("Finished.");
+            Console.WriteLine($"ExecutionTime: {executionTime} Milliseconds.");
+            Console.Read();
         }
     }
 }
